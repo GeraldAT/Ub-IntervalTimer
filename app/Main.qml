@@ -1,6 +1,4 @@
 import QtQuick 2.0
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.1
 import QtQuick.LocalStorage 2.0
 import Ubuntu.Components 1.1
 import IntervalTimer 1.0
@@ -51,10 +49,8 @@ MainView {
 
         db.transaction( function(tx) {
             var lastid=0;
-
             var rs = tx.executeSql('SELECT * FROM Timer');
             return rs.rows.length+1;
-
         })
     }
 
@@ -80,8 +76,6 @@ MainView {
                 id=1;
             }
 
-            console.log("id=" + id);
-            // Add another greeting row
             tx.executeSql('INSERT INTO Timer VALUES(?,?,?,?,?,?,?)', [id, timerName.text, parseInt(timerWarmup.text), parseInt(timerWorkout.text),parseInt(timerRest.text), parseInt(timerCooldown.text),parseInt(timerRounds.text) ]);
 
             // Show all greetings
@@ -121,8 +115,8 @@ MainView {
                     id: label_warmup
                     objectName: "label_warump"
 
-                    height: units.gu(4)
-                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
+//                    height: units.gu(4)
+//                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
 
                     text: i18n.tr("Warmup [s]")
                 }
@@ -158,8 +152,8 @@ MainView {
                 Label {
                     id: label_workout
                     objectName: "label_workout"
-                    height: units.gu(4)
-                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
+//                    height: units.gu(4)
+//                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
 
                     text: i18n.tr("Workout [s]")
                 }
@@ -183,8 +177,8 @@ MainView {
                 Label {
                     id: label_rest
                     objectName: "label_rest"
-                    height: units.gu(4)
-                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
+//                    height: units.gu(4)
+//                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
 
                     text: i18n.tr("Rest [s]")
                 }
@@ -208,8 +202,8 @@ MainView {
                 Label {
                     id: label_rounds
                     objectName: "label_rounds"
-                    height: units.gu(4)
-                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
+                    //                    height: units.gu(4)
+                    //                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
 
                     text: i18n.tr("Rounds")
                 }
@@ -233,8 +227,9 @@ MainView {
                 Label {
                     id: label_cooldown
                     objectName: "label_cooldown"
-                    height: units.gu(4)
-                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
+                    //                    height: units.gu(4)
+                    //                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
+
 
                     text: i18n.tr("Cooldown [s]")
                 }
@@ -258,8 +253,8 @@ MainView {
                 Label {
                     id: label_name
                     objectName: "label_name"
-                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
-                    height: units.gu(4)
+                    //                    height: units.gu(4)
+                    //                    width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
 
                     text: "Name"
                 }
