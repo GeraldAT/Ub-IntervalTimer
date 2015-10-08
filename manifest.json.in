@@ -1,0 +1,17 @@
+{
+    "name": "@APP_ID@",
+    "description": "description of IntervalTimer",
+    "architecture": "@CLICK_ARCH@",
+    "title": "@APP_NAME@",
+    "hooks": {
+        "IntervalTimer": {
+            "apparmor": "IntervalTimer.apparmor",
+            "desktop":  "IntervalTimer.desktop"
+        }
+    },
+    "version": "0.1",
+    "maintainer": "Gerald Ortner <ortner.g@hotmail.com>",
+    "framework" : "ubuntu-sdk-15.04"
+}
+
+
