@@ -23,7 +23,7 @@
 import QtQuick 2.0
 import QtQuick.LocalStorage 2.0
 
-//import QtQuick.Controls 1.1
+//import QtQuick.Controls 1.2
 //import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.1
 import Ubuntu.Components 1.1
@@ -329,6 +329,27 @@ MainView {
 
             Row{
                 spacing: units.gu(1)
+                Loader { id: pageLoader }
+
+
+
+                Button {
+                    id: startbutton
+                    objectName: "startbutton"
+                    width: units.gu(30)
+                    height: unit.gu(15)
+                    color: "orange"
+                    text: i18n.tr("START!")
+
+                    onClicked: {
+                        onClicked: pageLoader.source = "running.qml"
+                    }
+                }
+
+            }
+
+            Row{
+                spacing: units.gu(1)
 
 
 
@@ -336,7 +357,7 @@ MainView {
                     objectName: "button"
                     width: pageLayout.width - 2* mainView.margins - mainView.buttonWidth
 
-                    text: i18n.tr("Save Timer!")
+                    text: i18n.tr("Save Timer")
 
                     onClicked: {
                         saveTimer()
