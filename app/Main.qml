@@ -19,16 +19,16 @@
   *
   */
 
-
 import QtQuick 2.0
 import QtQuick.LocalStorage 2.0
-
-//import QtQuick.Controls 1.2
-//import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.1
-import Ubuntu.Components 1.1
 import QtGraphicalEffects 1.0
-import IntervalTimer 1.0
+import Ubuntu.Components 1.1
+import Ubuntu.Components.ListItems 0.1
+import Ubuntu.Components.Popups 0.1
+
+
+//import IntervalTimer 1.0
 
 /*!
     \brief MainView with Timer settings and start button
@@ -62,7 +62,7 @@ MainView {
 
         db.transaction( function(tx) {
             // Create the database if it doesn't exist
-            tx.executeSql('DROP TABLE IF EXISTS Timer');
+            //tx.executeSql('DROP TABLE IF EXISTS Timer');
             tx.executeSql('CREATE TABLE IF NOT EXISTS Timer(Id INTEGER PRIMARY KEY, name TEXT, warmup INT, work INT, rest INT, cooldown INT, rounds INT)');
 
         })
@@ -79,6 +79,19 @@ MainView {
         })
     }
 
+    function getTimer(idx){
+        db.transaction( function(tx){
+            var rs = tx.executeSql('SELECT * from Timer WHERE Id='+idx);
+            if(rs.rows.length>0) {
+                return rs.rows.item(0);
+            }
+            else {
+                return {};
+            }
+
+        })
+    }
+
     function getAllTimer(){
 
 
@@ -87,9 +100,10 @@ MainView {
 
             var r=""
             for(var i=0; i<rs.rows.length; i++){
-                r +=  JSON.stringify(rs.rows.item(i))+ "\n"
+                //r +=  JSON.stringify(rs.rows.item(i))+ "\n"
+                savedTimers.append(rs.rows.item(i))
             }
-            ta.text=r;
+            //ta.text=r;
         })
     }
 
@@ -108,6 +122,18 @@ MainView {
         })
     }
 
+    function getValue(tfield){
+
+        if(tfield.objectName==="timerWarmup"){
+            return getTimer(selectorFrom.index.Id);
+        }else{
+            return "42";
+
+        }
+
+
+    }
+
     backgroundColor: "#454545"
 
     Page {
@@ -118,6 +144,20 @@ MainView {
             getAllTimer()
         }
 
+
+
+
+        ListModel {
+            id: savedTimers
+
+            function getTName(idx){
+                return (idx >= 0 && idx < count) ? get(idx).name : "None"
+            }
+
+            function getId(idx){
+                return (idx >= 0 && idx < count) ? get(idx).Id : 0
+            }
+        }
         //        MyType {
         //            id: myType
 
@@ -127,12 +167,55 @@ MainView {
         //        }
         FontLoader { id: digitalMono; source: "fonts/digital-7 (mono).ttf" }
 
+
+        Component {
+            id: timerSelector
+            Popover  {
+                Column {
+                    anchors {
+                        top: parent.top
+                        left: parent.left
+                        right: parent.right
+
+                    }
+                    height: pageLayout.height
+                    Header {
+                        id: header
+                        text: i18n.tr("Select saved timer")
+                    }
+                    ListView {
+                        clip: true
+                        width: parent.width
+                        height: parent.height - header.height
+                        model: savedTimers
+                        delegate: Standard {
+                            objectName: "popoverTimerSelector"
+                            text: name
+                            onClicked: {
+                                caller.timerIndex = index
+                                caller.input.update()
+                                hide()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         Column{
             id: pageLayout
             spacing: units.gu(1)
             anchors {
                 margins: units.gu(2)
                 fill: parent
+            }
+            Button {
+                id: selectorFrom
+                objectName: "selectorFrom"
+                property int timerIndex: 0
+                property TextField input: inputFrom
+                text: "load"
+                onClicked: PopupUtils.open(timerSelector, selectorFrom)
             }
 
             Row{
@@ -171,6 +254,9 @@ MainView {
                             color: "black"
                             font { family: digitalMono.name; pixelSize: 20; capitalization: Font.Capitalize}
                             horizontalAlignment: TextInput.AlignRight
+                            function update() {
+                                text = getValue(timerWarmup)
+                            }
                         }
 
                     }
@@ -329,22 +415,35 @@ MainView {
 
             Row{
                 spacing: units.gu(1)
-                Loader { id: pageLoader }
 
-
-
-                Button {
-                    id: startbutton
-                    objectName: "startbutton"
-                    width: units.gu(30)
-                    height: unit.gu(15)
-                    color: "orange"
-                    text: i18n.tr("START!")
-
-                    onClicked: {
-                        onClicked: pageLoader.source = "running.qml"
+                Rectangle {
+                    width: 360
+                    height: 360
+                    Text {
+                        anchors.centerIn: parent
+                        text: "START!"
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            ld.source="running.qml"
+                        }
+                    }
+                    Loader{
+                        id:ld;
+                        anchors.fill: parent;
                     }
                 }
+
+//                Button {
+//                    id: startbutton
+//                    objectName: "startbutton"
+//                    width: units.gu(30)
+//                    height: unit.gu(15)
+//                    color: "orange"
+//                    text: i18n.tr("START!")
+
+//                }
 
             }
 
